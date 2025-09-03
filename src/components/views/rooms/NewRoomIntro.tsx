@@ -30,6 +30,8 @@ import { privateShouldBeEncrypted } from "../../../utils/rooms";
 import { LocalRoom } from "../../../models/LocalRoom";
 import { shouldEncryptRoomWithSingle3rdPartyInvite } from "../../../utils/room/shouldEncryptRoomWithSingle3rdPartyInvite";
 import { useScopedRoomContext } from "../../../contexts/ScopedRoomContext.tsx";
+import { useTopic } from "../../../hooks/room/useTopic";
+import { topicToHtml } from "../../../HtmlUtils";
 
 function hasExpectedEncryptionSettings(matrixClient: MatrixClient, room: Room): boolean {
     const isEncrypted: boolean = matrixClient.isRoomEncrypted(room.roomId);
@@ -52,6 +54,7 @@ const determineIntroMessage = (room: Room, encryptedSingle3rdPartyInvite: boolea
 const NewRoomIntro: React.FC = () => {
     const cli = useContext(MatrixClientContext);
     const { room, roomId } = useScopedRoomContext("room", "roomId");
+    const topic = useTopic(room);
 
     if (!room || !roomId) {
         throw new Error("Unable to create a NewRoomIntro without room and roomId");
@@ -106,7 +109,7 @@ const NewRoomIntro: React.FC = () => {
         );
     } else {
         const inRoom = room && room.getMyMembership() === KnownMembership.Join;
-        const topic = room.currentState.getStateEvents(EventType.RoomTopic, "")?.getContent()?.topic;
+        const htmlTopic = topicToHtml(topic?.text, topic?.html);
         const canAddTopic = inRoom && room.currentState.maySendStateEvent(EventType.RoomTopic, cli.getSafeUserId());
 
         const onTopicClick = (): void => {
@@ -127,7 +130,7 @@ const NewRoomIntro: React.FC = () => {
         if (canAddTopic && topic) {
             topicText = _t(
                 "room|intro|topic_edit",
-                { topic },
+                { htmlTopic },
                 {
                     a: (sub) => (
                         <AccessibleButton element="a" kind="link_inline" onClick={onTopicClick}>
@@ -137,7 +140,7 @@ const NewRoomIntro: React.FC = () => {
                 },
             );
         } else if (topic) {
-            topicText = _t("room|intro|topic", { topic });
+            topicText = _t("room|intro|topic", { htmlTopic });
         } else if (canAddTopic) {
             topicText = _t(
                 "room|intro|no_topic",
