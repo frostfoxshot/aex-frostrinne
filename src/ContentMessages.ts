@@ -18,6 +18,7 @@ import {
     type UploadOpts,
     type UploadProgress,
     THREAD_RELATION_TYPE,
+    MatrixError,
 } from "matrix-js-sdk/src/matrix";
 import {
     type ImageInfo,
@@ -31,6 +32,7 @@ import encrypt from "matrix-encrypt-attachment";
 import extractPngChunks from "png-chunks-extract";
 import { logger } from "matrix-js-sdk/src/logger";
 import { removeElement } from "matrix-js-sdk/src/utils";
+import React, { type ReactNode } from "react";
 
 import dis from "./dispatcher/dispatcher";
 import { _t } from "./languageHandler";
@@ -653,12 +655,36 @@ export default class ContentMessages {
             }
 
             if (!upload.cancelled) {
-                let desc = _t("upload_failed_generic", { fileName: upload.fileName });
+                let desc: ReactNode = _t("upload_failed_generic", { fileName: upload.fileName });
                 if (unwrappedError instanceof HTTPError && unwrappedError.httpStatus === 413) {
                     desc = _t("upload_failed_size", {
                         fileName: upload.fileName,
                     });
+                } else if (
+                    unwrappedError instanceof MatrixError &&
+                    unwrappedError.errcode === "M_UNKNOWN" &&
+                    unwrappedError.data["org.matrix.msc4335.errcode"] === "M_USER_LIMIT_EXCEEDED" &&
+                    typeof unwrappedError.data["org.matrix.msc4335.info_url"] === "string"
+                ) {
+                    // Support for experimental MSC4335 M_USER_LIMIT_EXCEEDED error
+                    desc = _t(
+                        "msc4335_upload_failed_user_limit_exceeded",
+                        { fileName: upload.fileName },
+                        {
+                            a: (sub): ReactNode =>
+                                React.createElement(
+                                    "a",
+                                    {
+                                        target: "_blank",
+                                        href: unwrappedError.data["org.matrix.msc4335.info_url"],
+                                        rel: "noreferrer noopener",
+                                    },
+                                    sub,
+                                ),
+                        },
+                    );
                 }
+
                 Modal.createDialog(ErrorDialog, {
                     title: _t("upload_failed_title"),
                     description: desc,

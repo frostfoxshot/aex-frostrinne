@@ -1676,6 +1676,7 @@
         "toast_description": "%(brand)s is experimental on a mobile web browser. For a better experience and the latest features, use our free native app.",
         "toast_title": "Use app for a better experience"
     },
+    "msc4335_upload_failed_user_limit_exceeded": "The file '%(fileName)s' failed to upload due to exceeding a limit on your account. <a>Information about your account limits</a>",
     "name_and_id": "%(name)s (%(userId)s)",
     "no_more_results": "No more results",
     "notif_panel": {

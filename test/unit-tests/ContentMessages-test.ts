@@ -16,6 +16,7 @@ import {
 } from "matrix-js-sdk/src/matrix";
 import { type ImageInfo } from "matrix-js-sdk/src/types";
 import encrypt, { type IEncryptedFile } from "matrix-encrypt-attachment";
+import { render } from "jest-matrix-react";
 
 import ContentMessages, { UploadCanceledError, uploadFile } from "../../src/ContentMessages";
 import { doMaybeLocalRoomAction } from "../../src/utils/local-room";
@@ -315,6 +316,24 @@ describe("ContentMessages", () => {
                     description: _t("upload_failed_size", { fileName: "fileName" }),
                 }),
             );
+            dialogSpy.mockRestore();
+        });
+
+        it("handles MSC4335 M_USER_LIMIT_EXCEEDED error and shows info URL", async () => {
+            mocked(client.uploadContent).mockRejectedValue(
+                new MatrixError({
+                    "errcode": "M_UNKNOWN",
+                    "error": "User limit exceeded",
+                    "org.matrix.msc4335.errcode": "M_USER_LIMIT_EXCEEDED",
+                    "org.matrix.msc4335.info_url": "https://example.com/info",
+                }),
+            );
+            const file = new File([], "fileName", { type: "image/jpeg" });
+            const dialogSpy = jest.spyOn(Modal, "createDialog");
+            await contentMessages.sendContentToRoom(file, roomId, undefined, client, undefined);
+            const { container } = render(dialogSpy.mock.calls[0][1]?.description);
+            const link = container.querySelector('a[href="https://example.com/info"]');
+            expect(link).toBeTruthy();
             dialogSpy.mockRestore();
         });
     });
