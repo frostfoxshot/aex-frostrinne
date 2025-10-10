@@ -667,8 +667,7 @@ export default class ContentMessages {
                         title: _t("upload_failed_title"),
                         error: {
                             infoUri: unwrappedError.data["org.matrix.msc4335.info_uri"],
-                            softLimit: unwrappedError.data["org.matrix.msc4335.soft_limit"],
-                            increaseUri: unwrappedError.data["org.matrix.msc4335.increase_uri"],
+                            increaseUri: unwrappedError.data["org.matrix.msc4335.soft_limit"] ? unwrappedError.data["org.matrix.msc4335.increase_uri"] : undefined,
                         },
                     });
                 } else {

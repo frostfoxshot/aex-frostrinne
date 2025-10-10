@@ -9,12 +9,10 @@ import React from "react";
 
 import { _t } from "../../../languageHandler";
 import BaseDialog from "./BaseDialog";
-import DialogButtons from "../elements/DialogButtons";
 import AccessibleButton from "../elements/AccessibleButton";
 
 interface MSC4335Data {
     infoUri: string;
-    softLimit: boolean;
     increaseUri?: string;
 }
 
@@ -32,20 +30,13 @@ export default class MSC4335UserLimitExceededDialog extends React.Component<IPro
     onFinished = (success?: boolean): void => {
         this.props.onFinished?.(success);
     };
-
-    onLearnMore = (): void => {
-        window.open(this.props.error.infoUri, "_blank", "noreferrer");
-    };
-
-    onIncrease = (): void => {
-        const uri = this.props.error.increaseUri;
-        if (uri) {
-            window.open(uri, "_blank", "noreferrer");
-        }
+    onClick = (): void => {
+        // noop as using href
     };
 
     public render(): React.ReactNode {
-        const { softLimit } = this.props.error;
+        const softLimit = !!this.props.error.increaseUri;
+
         return (
             <BaseDialog
                 className="mx_ErrorDialog"
@@ -68,22 +59,37 @@ export default class MSC4335UserLimitExceededDialog extends React.Component<IPro
                           )
                         : _t("msc4335_user_limit_exceeded|hard_limit")}
                 </div>
-                <DialogButtons
-                    primaryButton={
-                        softLimit
-                            ? _t("msc4335_user_limit_exceeded|increase_limit")
-                            : _t("msc4335_user_limit_exceeded|learn_more")
-                    }
-                    hasCancel={false}
-                    onPrimaryButtonClick={softLimit ? this.onIncrease : this.onLearnMore}
-                    focus={true}
-                >
-                    {softLimit && (
-                        <AccessibleButton onClick={this.onLearnMore} kind="link">
-                            {_t("msc4335_user_limit_exceeded|learn_more")}
+                <div className="mx_Dialog_buttons">
+                    <div className="mx_Dialog_buttons_row">
+                        {softLimit && (
+                            <AccessibleButton
+                                kind="link"
+                                element="a"
+                                href={this.props.error.infoUri}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                data-testid="learn-more"
+                                onClick={this.onClick}
+                            >
+                                {_t("msc4335_user_limit_exceeded|learn_more")}
+                            </AccessibleButton>
+                        )}
+                        <AccessibleButton
+                            kind="primary"
+                            element="a"
+                            href={softLimit ? this.props.error.increaseUri : this.props.error.infoUri}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            autoFocus={true}
+                            onClick={this.onClick}
+                            data-testid="primary-button"
+                        >
+                            {softLimit
+                                ? _t("msc4335_user_limit_exceeded|increase_limit")
+                                : _t("msc4335_user_limit_exceeded|learn_more")}
                         </AccessibleButton>
-                    )}
-                </DialogButtons>
+                    </div>
+                </div>
             </BaseDialog>
         );
     }
