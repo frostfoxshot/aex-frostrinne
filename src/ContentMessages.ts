@@ -662,9 +662,10 @@ export default class ContentMessages {
                     typeof unwrappedError.data["org.matrix.msc4335.info_uri"] === "string"
                 ) {
                     // Support for experimental MSC4335 M_USER_LIMIT_EXCEEDED error
-                    const softLimit = typeof unwrappedError.data["org.matrix.msc4335.soft_limit"] === "boolean"
-                        ? unwrappedError.data["org.matrix.msc4335.soft_limit"]
-                        : false;
+                    const softLimit =
+                        typeof unwrappedError.data["org.matrix.msc4335.soft_limit"] === "boolean"
+                            ? unwrappedError.data["org.matrix.msc4335.soft_limit"]
+                            : false;
                     Modal.createDialog(MSC4335UserLimitExceededDialog, {
                         title: _t("upload_failed_title"),
                         error: {

@@ -324,7 +324,7 @@ describe("ContentMessages", () => {
                 new MatrixError({
                     "errcode": "ORG.MATRIX.MSC4335_USER_LIMIT_EXCEEDED",
                     "error": "User limit exceeded",
-                    "org.matrix.msc4335.info_uri": "https://example.com/info"
+                    "org.matrix.msc4335.info_uri": "https://example.com/info",
                 }),
             );
             const file = new File([], "fileName", { type: "image/jpeg" });
@@ -333,8 +333,8 @@ describe("ContentMessages", () => {
             expect(dialogSpy).toHaveBeenCalledWith(
                 MSC4335UserLimitExceededDialog,
                 expect.objectContaining({
-                    "title": _t("upload_failed_title"),
-                    "error": {
+                    title: _t("upload_failed_title"),
+                    error: {
                         infoUri: "https://example.com/info",
                         increaseUri: undefined,
                     },
@@ -359,8 +359,8 @@ describe("ContentMessages", () => {
             expect(dialogSpy).toHaveBeenCalledWith(
                 MSC4335UserLimitExceededDialog,
                 expect.objectContaining({
-                    "title": _t("upload_failed_title"),
-                    "error": {
+                    title: _t("upload_failed_title"),
+                    error: {
                         infoUri: "https://example.com/info",
                         increaseUri: "https://example.com/increase",
                     },

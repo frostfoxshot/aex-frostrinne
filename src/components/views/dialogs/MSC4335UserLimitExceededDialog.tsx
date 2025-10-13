@@ -27,10 +27,10 @@ interface IState {
 }
 
 export default class MSC4335UserLimitExceededDialog extends React.Component<IProps, IState> {
-    onFinished = (success?: boolean): void => {
+    private onFinished = (success?: boolean): void => {
         this.props.onFinished?.(success);
     };
-    onClick = (): void => {
+    private onClick = (): void => {
         // noop as using href
     };
 
