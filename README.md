@@ -58,8 +58,9 @@ Frostrinne can be packaged as an Electron-based desktop app. Build instructions 
 
 Frostrinne is licensed under the same multi-license terms as Element, with modifications by the **Aexel Group**. Usage can follow AGPL/GPL licenses or a commercial license agreement depending on the use case.
 
+=======================================
 
-
+=======================================
 
 # Element Original Readme file
 
