@@ -1,4 +1,5 @@
 /*
+Copyright 2025 Ethan Dower <ethan.dower@icloud.com>
 Copyright 2025 Element Creations Ltd.
 
 SPDX-License-Identifier: AGPL-3.0-only OR GPL-3.0-only OR LicenseRef-Element-Commercial
