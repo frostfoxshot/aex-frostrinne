@@ -317,3 +317,39 @@ body {
         radial-gradient(100% 100% at 0% 0%, hsla(250deg, 100%, 88%, 0.3) 0%, hsla(0deg, 100%, 86%, 0) 100%),
         radial-gradient(106.35% 96.26% at 100% 0%, hsla(25deg, 100%, 88%, 0.4) 0%, hsla(167deg, 76%, 82%, 0) 100%) !important;
 }
+
+/* ************************************************************ */
+/* CLEANER ICON FIX - ONLY TARGETS ACTUAL ICONS (BY A SILLY FOX :3) */
+/* ************************************************************ */
+
+/* Target SVGs directly (most icons in Element/Frostrinne are SVGs) */
+svg,
+svg[fill="currentColor"],
+svg.mx_Icon,
+svg path,
+svg use {
+    color: #ff33aa !important; /* Super bright hot pink */
+    fill: currentColor !important;
+    stroke: currentColor !important;
+    opacity: 1 !important;
+}
+
+/* Specific known icon containers - safe and precise */
+.mx_Icon,
+.mx_IconButton svg,
+.mx_IconButton .mx_Icon,
+.mx_ToggleSwitch svg,
+.mx_ToggleSwitch .mx_ToggleSwitch_ball,
+.mx_Field svg,
+.mx_AccessibleButton svg,
+.mx_RoomHeader svg,
+.mx_LeftPanel svg,
+.mx_RightPanel svg,
+.mx_ContextualMenu svg,
+.mx_UserMenu_icon svg {
+    color: #ff33aa !important;
+    fill: currentColor !important;
+    opacity: 1 !important;
+}
+
+/* End of cleaner icon fix */
